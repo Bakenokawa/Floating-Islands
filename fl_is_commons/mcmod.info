@@ -1,0 +1,20 @@
+[
+{
+  "modid": "FL_IS",
+  "name": "Floating Islands",
+  "description": "Ever wanted to explore mythical lands suspended in the sky? Here's your chance!",
+  "version": "0.0.1",
+  "url": "https://github.com/Bakenokawa/Floating-Islands",
+  "updateUrl": "",
+  "authorList": [
+    "pahimar"
+  ],
+  "credits": "By Bakenokawa, based upon the original Floating Islands by HogsofWar",
+  "logoFile": "",
+  "screenshots": [
+  ],
+  "parent":"",
+  "dependencies": [
+  ]
+}
+]
