@@ -8,9 +8,9 @@ import bakenokawa.FL_IS.configuration.ConfigurationSettings;
 
 public class GeneratorCommon
 {
-    private static Random rand;
 
-    public static boolean canSpawn()
+
+    public static boolean canSpawn(Random rand)
     {
         if ( ConfigurationSettings.ENABLE_ISLAND_SPAWN )
         {
@@ -54,13 +54,16 @@ public class GeneratorCommon
             // encountered.
             ID = world.getBlockId(i, temp, k);
             if (ID == 8 || ID == 9) {
+                
                 return -999;
             }
             if (((ID >= 1) && (ID <= 4)) || ID == 12)
             {
+                
                 ID = world.getBlockId(i, temp + 1, k);
                 if (ID == 0) 
                 {
+                   
                     // ensures ( more or less) that the block @i,temp,k is a
                     // surface block
                     return temp;
@@ -71,9 +74,29 @@ public class GeneratorCommon
                 continue;
             }
         }
+        System.out.println("Error!!! findGround kicked due reaching bedrock");
         return -999;
     }
 
-
+    public static boolean isLevel_Round(World world, int i, int k, int inputHeight, int Radius)
+    {
+        // checking for levelness of the area;
+        for (int x = -Radius; x <= Radius; x++)
+        {
+            for (int z = -Radius; z <= Radius; z++)
+            {
+                if ((x * x + z * z) > Radius * Radius)
+                {
+                    continue; // prevents execution if current position is out of bounds
+                   
+                }
+                else if (world.getBlockId(i + x, inputHeight - 1, k + z) == 0)
+                {
+                    return false; // ground is uneven.
+                }
+            }
+        }
+        return true;
+    }
 }
 

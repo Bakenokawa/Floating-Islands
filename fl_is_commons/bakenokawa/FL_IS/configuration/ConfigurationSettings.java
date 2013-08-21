@@ -4,7 +4,7 @@ public class ConfigurationSettings
 {
     // Enable/Disable All Island Generation.
     public static boolean ENABLE_ISLAND_SPAWN;
-    public static String  ENABLE_ISLAND_SPAWN_CONFIGNAME = "";
+    public static String  ENABLE_ISLAND_SPAWN_CONFIGNAME = "Enable Island Spawning";
     public static boolean ENABLE_ISLAND_SPAWN_DEFAU = true;
 
     // Island Gen Settings.
