@@ -1,13 +1,19 @@
 package bakenokawa.FL_IS;
 
+import java.io.File;
+
+import bakenokawa.FL_IS.configuration.ConfigurationHandler;
 import bakenokawa.FL_IS.lib.Reference;
+
 import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.Init;
-import cpw.mods.fml.common.Mod.PostInit;
-import cpw.mods.fml.common.Mod.PreInit;
+import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.Mod.Instance;
+
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+
+import cpw.mods.fml.common.registry.GameRegistry;
 
 /**
  * Bakenokawa's Floating Islands
@@ -19,20 +25,35 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION )
 public class Bakeno_FloatingIslands
 {
+    @Instance(Reference.MOD_ID)
+    public static Bakeno_FloatingIslands instance;
+    
     // pre-init:: Load any files needed for mod, init blocks and items.
-    @PreInit
+    @EventHandler
     public void preInit(FMLPreInitializationEvent Event)
     {
+     // Initialize the configuration
+        ConfigurationHandler.init(new File(Event.getModConfigurationDirectory()
+                .getAbsolutePath()
+                + File.separator
+                + Reference.CHANNEL_NAME
+                + File.separator + Reference.MOD_ID + ".cfg"));
+        
+        // Initialize mod items
+        // ModItems.init();
+        
     }
 
     // init :: regeister events for in-game code runs, and crafting recipes.
-    @Init
+    @EventHandler
     public void init(FMLInitializationEvent event)
     {
+        //Register Floating Island Generator to World Generator.
+        //GameRegistry.registerWorldGenerator(FIgen);
     }
 
     //post-init:: after all mods loaded, run code which runs offf other mods, such as API stuff.
-    @PostInit
+    @EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
     }
