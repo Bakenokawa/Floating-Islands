@@ -19,28 +19,29 @@ public class FloatingIslandGenerator implements IWorldGenerator
             IChunkProvider chunkGenerator, IChunkProvider chunkProvider)
     {
 
-       
         if (GeneratorCommon.canSpawn(random))
         {
             /*
              * This gets us a useful XZ co-ord, plus some jitter for the center
              * of the island
              */
-            int i = chunkX * 8 + random.nextInt(16);
-            int k = chunkZ * 8 + random.nextInt(16);
+            int i = chunkX * 16 + random.nextInt(16);
+            int k = chunkZ * 16 + random.nextInt(16);
             int j = GeneratorCommon.findGround(world, i, k);
-            
 
-            if ( j != -999)
+            if (j != -999)
             {
-                System.out.println("Now Generating your Island at X: "+i+" Z: "+k); 
-                original(world,random,i,j,k);
+                System.out.println("Now Generating your Island at X: " + i
+                        + " Z: " + k);
+                int[] drip_pan = original(world, random, i, j, k);
+                GeneratorCommon.cleanUp(world, i, j, k, drip_pan);
             }
         }
 
     }
 
-    public static boolean original(World world, Random random, int i, int inputHeight, int k)
+    public static int[] original(World world, Random random, int i,
+            int inputHeight, int k)
     {
 
         int Radius = ConfigurationSettings.MIN_ISLAND_SIZE
@@ -50,31 +51,42 @@ public class FloatingIslandGenerator implements IWorldGenerator
 
         int ID = 0;
         int replaceID = ConfigurationSettings.REPLACE_BLOCK_ID;
-        int sphereHeight = inputHeight - 6; // Different between "island height" and sphere cap.
+        int sphereHeight = inputHeight - 6; // Different between "island height"
+                                            // and sphere cap.
         boolean areaLvl = true;
 
         // checking for levelness of the area;
-        areaLvl = GeneratorCommon.isLevel_Round(world, i, k, inputHeight, Radius);
 
-        // iterating through the 2Radius x 2Radius square, only acting on the circle itself.
-       
+        areaLvl = GeneratorCommon.isLevel_Round(world, i, k, inputHeight,
+                Radius);
+
+        // iterating through the 2Radius x 2Radius square, only acting on the
+        // circle itself.
+
         for (int x = -Radius; x <= Radius; x++)
         {
             for (int z = -Radius; z <= Radius; z++)
             {
                 if ((x * x + z * z) > Radius * Radius)
                 {
-                    continue; // prevents execution if current position is out of bounds
+                    continue; // prevents execution if current position is out
+                              // of bounds
                 }
                 // Cylinder move - literally moves a column of blocks upwards.
-                /* Author note: It is possible to pick sphereHeight here, which creates a jittering, messing bottom of the island. May be used in future implementation. */
+                /*
+                 * Author note: It is possible to pick sphereHeight here, which
+                 * creates a jittering, messing bottom of the island. May be
+                 * used in future implementation.
+                 */
                 for (int y = sphereHeight; y < inputHeight; y++)
                 {
                     // set block
                     ID = world.getBlockId(i + x, y, k + z);
                     if (ID == 8 || ID == 9)
                     {
-                        world.setBlockMetadataWithNotify(i + x, y + heightBuffer, k + z, ID, world.getBlockMetadata(i + x, y, k + z));
+                        world.setBlockMetadataWithNotify(i + x, y
+                                + heightBuffer, k + z, ID,
+                                world.getBlockMetadata(i + x, y, k + z));
                     }
                     else
                     {
@@ -100,14 +112,19 @@ public class FloatingIslandGenerator implements IWorldGenerator
                         continue; // prevents execution when out-of-bounds (out
                         // of sphere)
                     }
-                    ID = world.getBlockId(i + x, sphereHeight - sphereCap, k + z);
-                    world.setBlock(i + x, sphereHeight + heightBuffer - sphereCap, k + z, ID); // Change Air Block
-                    world.setBlock(i + x, sphereHeight - sphereCap, k + z, replaceID); // Replace old block.
+                    ID = world.getBlockId(i + x, sphereHeight - sphereCap, k
+                            + z);
+                    world.setBlock(i + x, sphereHeight + heightBuffer
+                            - sphereCap, k + z, ID); // Change Air Block
+                    world.setBlock(i + x, sphereHeight - sphereCap, k + z,
+                            replaceID); // Replace old block.
 
                 }
             }
         }
-        return true;
+        int temp[] =
+        { Radius, heightBuffer };
+        return temp;
     }
 
 }
