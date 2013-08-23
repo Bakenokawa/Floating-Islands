@@ -106,13 +106,50 @@ public class GeneratorCommon
         // triple nested for loop, until every block found is air. Also ignore
         // air blocks.
         // drip_pan[1] is the island Radius, drip_pan[2] is the heightBuffer
-    
+
         // for y, input height until input height+heightBuffer.
-            // for x: input x - radius to input x + radius
-                // for z: input z - radius to input z + radius
-                    // if out of circle: continue
-                    // if ID = air : continue
-                    // else: move this block to y+heightBuffer, inc cntr.
+        // for x: input x - radius to input x + radius
+        // for z: input z - radius to input z + radius
+        // if out of circle: continue
+        // if ID = air : continue
+        // else: move this block to y+heightBuffer, inc cntr.
         // if cntr = 0, then end loop;
+
+        int cntr = 0; // Counts any non-air blocks. Used to terminate the loop.
+        int ID;
+
+        for (int y = j; y < j + drip_pan[2]; y++)
+        {
+            cntr = 0;
+            for (int x = i - drip_pan[1]; x < (i + drip_pan[1]); x++)
+            {
+                for (int z = k - drip_pan[1]; z < (k + drip_pan[1]); z++)
+                {
+                    if ((x * x + z * z) > drip_pan[1] * drip_pan[1])
+                    {
+                        continue; // do nothing.
+                    }
+                    ID = world.getBlockId(x, y, z);
+                    if (ID == 0)
+                    {
+                        continue; // do nothing.
+                    }
+                    else
+                    {
+                        cntr++;
+                        world.setBlock(x, y + drip_pan[2], z, ID); // change
+                                                                   // sky
+                                                                   // block
+                        world.setBlock(x, y, z, 0); // replace with air.
+                    }
+                }
+            }
+
+            if (cntr == 0)
+            {
+                break; // exit loop since there was nothing to move.
+            }
+        }
+
     }
 }
